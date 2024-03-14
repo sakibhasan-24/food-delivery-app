@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import Swal from "sweetalert2/dist/sweetalert2.js";
+import "sweetalert2/src/sweetalert2.scss";
 import {
   getStorage,
   ref,
@@ -6,26 +8,22 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import app from "../../firebase/firebase.config";
+// import useApiCall from "../../hooks/api/useApiCall";
+import useAuth from "../../hooks/useAuth";
 export default function SignUp() {
+  const { userLoading, userSignUp } = useAuth();
   const [formData, setFormData] = useState({});
   const [imageUrl, setImageUrl] = useState(null);
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
 
-  const handleInputChange = (e) => {
-    if (e.target.name === "image") {
-      setFormData({ ...formData, image: e.target.files[0] });
-    } else {
-      setFormData({ ...formData, [e.target.name]: e.target.value });
-    }
-  };
   //   console.log(formData);
   const handleImageUpload = async (e) => {
     // console.log("hello");
     // console.log(e.target.files[0]);
     const image = e.target.files[0];
-    const formData = new FormData();
-    formData.append("image", image);
+    // const formData = new FormData();
+    // formData.append("image", image);
     const storage = getStorage(app);
     const imageName = image.name + new Date().getTime();
     const storageRef = ref(storage, imageName);
@@ -38,9 +36,9 @@ export default function SignUp() {
         const progress = Math.round(
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         );
-        if (imageUrl) {
-          setUploadProgress(0);
-        }
+        // if (imageUrl) {
+        //   setUploadProgress(0);
+        // }
         setUploadProgress(progress);
         // console.log("Upload is " + progress + "% done");
         switch (snapshot.state) {
@@ -74,20 +72,29 @@ export default function SignUp() {
         // Upload completed successfully, now we can get the download URL
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           //   console.log("File available at", downloadURL);
+
+          //   console.log("from", imageUrl);
+          setFormData({ ...formData, image: downloadURL });
           setImageUrl(downloadURL);
-          setFormData({ ...formData, image: imageUrl });
         });
       }
     );
   };
 
+  //   console.log(imageUrl);
   console.log(formData);
-  //   useEffect(() => {
-  //     //   setFormData({ ...formData, image: imageUrl });
-  //     handleImageUpload();
-  //   }, []);
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
+    console.log(formData);
+    // const user = {
+    //   userName: formData.name,
+    //   email: formData.email,
+    //   profilePicture: formData.image,
+    //   password: formData.password,
+    // };
+    // console.log(user);
+    const userInfo = await userSignUp(formData);
+    // console.log(userInfo);
   };
   return (
     <div className="w-full sm:max-w-2xl mx-auto p-6 sm:p-12">
@@ -108,11 +115,10 @@ export default function SignUp() {
                 placeholder="name"
                 required
                 type="text"
-                id="name"
-                name="name"
+                id="userName"
                 // onChange={handleInputChange}
                 onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
+                  setFormData({ ...formData, userName: e.target.value })
                 }
                 className="w-full mt-1 px-3 py-2 placeholder-slate-300 border border-slate-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
               />
@@ -131,7 +137,6 @@ export default function SignUp() {
                 required
                 type="email"
                 id="email"
-                name="email"
                 // onChange={handleInputChange}
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
@@ -153,7 +158,6 @@ export default function SignUp() {
                 required
                 type="password"
                 id="password"
-                name="password"
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })
                 }
