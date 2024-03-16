@@ -1,16 +1,40 @@
 import React, { useEffect, useState } from "react";
-import Swal from "sweetalert2/dist/sweetalert2.js";
-
 import useAuth from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+// import { Swal } from "sweetalert2/dist/sweetalert2";
+import Swal from "sweetalert2";
+import { useDispatch } from "react-redux";
+import {
+  logInFailure,
+  logInStart,
+  logInSuccess,
+} from "../../redux/user/userSlice";
+
 export default function Login() {
   const { userLoading, userLogIn } = useAuth();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({});
-
+  // logInStart,logInFailure
   const handleFormSubmit = async (e) => {
+    dispatch(logInStart());
     e.preventDefault();
     // console.log(formData);
     const res = await userLogIn(formData);
-    console.log(res);
+    dispatch(logInSuccess(res));
+    try {
+      if (res.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Login Successfully",
+          timer: 1500,
+        });
+      }
+      navigate("/");
+    } catch (error) {
+      dispatch(logInFailure());
+      console.log(error);
+    }
   };
   //   console.log(formData);
   return (
@@ -65,7 +89,8 @@ export default function Login() {
 
           <input
             type="submit"
-            value={"signUp"}
+            value={`${userLoading ? "Login......." : "login"}`}
+            disabled={userLoading}
             className="w-full my-6 bg-slate-700 rounded-md px-4 py-2 font-bold text-slate-50  hover:bg-slate-600 cursor-pointer"
           />
         </form>
