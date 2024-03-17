@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { MdOutlineRestaurantMenu } from "react-icons/md";
+import { useSelector } from "react-redux";
 
 export default function Navbar() {
   const [sideBar, setSideBar] = useState(false);
+  const { currentUser } = useSelector((state) => state.user);
+  // console.log(currentUser);
   //   console.log(sideBar);
 
   return (
@@ -36,9 +39,21 @@ export default function Navbar() {
         <Link className="mr-5 hover:text-orange-400" to="/">
           Salads
         </Link>
-        <Link className="mr-5 hover:text-orange-400" to="/login">
-          Login
-        </Link>
+        {currentUser ? (
+          <>
+            <Link to="/dashboard">
+              <img
+                src={currentUser?.profilePicture}
+                alt="image"
+                className="w-[40px] h-[40px] rounded-full object-cover"
+              />
+            </Link>
+          </>
+        ) : (
+          <Link className="my-3 text-white hover:text-orange-400" to="/login">
+            Login
+          </Link>
+        )}
       </div>
       <MdOutlineRestaurantMenu
         className="text-4xl sm:hidden cursor-pointer"
@@ -65,9 +80,21 @@ export default function Navbar() {
           <Link className="my-3 text-white hover:text-orange-400" to="/">
             Salads
           </Link>
-          <Link className="my-3 text-white hover:text-orange-400" to="/login">
-            Login
-          </Link>
+          {currentUser ? (
+            <>
+              <Link to="/dashboard">
+                <img
+                  src={currentUser?.profilePicture}
+                  alt="image"
+                  className="w-[40px] h-[40px] rounded-full object-cover"
+                />
+              </Link>
+            </>
+          ) : (
+            <Link className="my-3 text-white hover:text-orange-400" to="/login">
+              Login
+            </Link>
+          )}
         </div>
       )}
     </div>
