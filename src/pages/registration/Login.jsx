@@ -9,6 +9,7 @@ import {
   logInStart,
   logInSuccess,
 } from "../../redux/user/userSlice";
+import GoogleSignUp from "../../component/GoogleSignUp";
 
 export default function Login() {
   const { userLoading, userLogIn } = useAuth();
@@ -93,6 +94,7 @@ export default function Login() {
             disabled={userLoading}
             className="w-full my-6 bg-slate-700 rounded-md px-4 py-2 font-bold text-slate-50  hover:bg-slate-600 cursor-pointer"
           />
+          <GoogleSignUp />
         </form>
       </div>
     </div>

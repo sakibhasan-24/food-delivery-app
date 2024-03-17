@@ -10,6 +10,7 @@ import {
 import app from "../../firebase/firebase.config";
 // import useApiCall from "../../hooks/api/useApiCall";
 import useAuth from "../../hooks/useAuth";
+import GoogleSignUp from "../../component/GoogleSignUp";
 export default function SignUp() {
   const { userLoading, userSignUp } = useAuth();
   const [formData, setFormData] = useState({});
@@ -201,6 +202,7 @@ export default function SignUp() {
             value={"signUp"}
             className="w-full bg-slate-700 rounded-md px-4 py-2 font-bold text-slate-50  hover:bg-slate-600 cursor-pointer"
           />
+          <GoogleSignUp />
         </form>
       </div>
     </div>

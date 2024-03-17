@@ -8,7 +8,7 @@ export default function useAuth() {
     setUserLoading(true);
     try {
       const res = await axiosPublic.post("/api/user/signup", userInfo);
-      console.log(res);
+      //   console.log(res);
       return res.data;
     } catch (error) {
       console.log(error);
@@ -21,7 +21,7 @@ export default function useAuth() {
     setUserLoading(true);
     try {
       const res = await axiosPublic.post("/api/user/login", userInfo);
-      console.log(res);
+      //   console.log(res);
       return res.data;
     } catch (error) {
       console.log(error);
@@ -30,5 +30,19 @@ export default function useAuth() {
     }
   };
 
-  return { userSignUp, userLogIn, userLoading };
+  const googleSignIn = async (userInfo) => {
+    // console.log(userInfo);
+    setUserLoading(true);
+    try {
+      const res = await axiosPublic.post("/api/user/googleLogIn", userInfo);
+      //   console.log(res.data);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setUserLoading(false);
+    }
+  };
+
+  return { userSignUp, userLogIn, googleSignIn, userLoading };
 }
