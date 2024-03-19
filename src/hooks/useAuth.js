@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import useApiCall from "./api/useApiCall";
+import { useDispatch, useSelector } from "react-redux";
+import { logOutSuccess } from "../redux/user/userSlice";
 
 export default function useAuth() {
   const axiosPublic = useApiCall();
+  const dispatch = useDispatch();
+  const { currentUser } = useSelector((state) => state.user);
+
   const [userLoading, setUserLoading] = useState(false);
   const userSignUp = async (userInfo) => {
     setUserLoading(true);
@@ -44,5 +49,18 @@ export default function useAuth() {
     }
   };
 
-  return { userSignUp, userLogIn, googleSignIn, userLoading };
+  const userLogOut = async () => {
+    setUserLoading(true);
+    try {
+      const res = await axiosPublic(`/api/user/userLogOut/${currentUser._id}`);
+      dispatch(logOutSuccess(res.data));
+      return res.data;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setUserLoading(false);
+    }
+  };
+
+  return { userSignUp, userLogIn, googleSignIn, userLogOut, userLoading };
 }
