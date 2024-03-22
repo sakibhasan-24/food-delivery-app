@@ -5,6 +5,7 @@ import Login from "../pages/registration/Login";
 import SignUp from "../pages/registration/SignUp";
 import Dashboard from "../pages/dashboard/dashboard/Dashboard";
 import Profile from "../pages/dashboard/profile/Profile";
+import AddMenu from "../pages/menu/AddMenu/AddMenu";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
           {
             path: "/dashboard/profile",
             element: <Profile />,
+          },
+          {
+            path: "/dashboard/add-menu",
+            element: <AddMenu />,
           },
         ],
       },

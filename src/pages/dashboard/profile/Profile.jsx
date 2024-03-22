@@ -46,7 +46,7 @@ export default function Profile() {
     }
   };
 
-  console.log();
+  // console.log(currentUser?.profilePicture);
   return (
     <div className="my-12 w-full sm:max-w-xl mx-auto">
       <h1 className="text-3xl font-bold mb-4 text-center">Profile</h1>
@@ -58,7 +58,7 @@ export default function Profile() {
           <div>
             <input type="file" ref={fileRef} hidden onChange={imageChange} />
             <img
-              src={imageUrl || currentUser?.ProfilePicture}
+              src={imageUrl || currentUser?.profilePicture}
               alt="image"
               onChange={imageChange}
               onClick={() => fileRef.current.click()}
