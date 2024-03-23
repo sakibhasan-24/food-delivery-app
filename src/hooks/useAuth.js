@@ -53,6 +53,7 @@ export default function useAuth() {
     setUserLoading(true);
     try {
       const res = await axiosPublic(`/api/user/userLogOut/${currentUser._id}`);
+      console.log(res);
       dispatch(logOutSuccess(res.data));
       return res.data;
     } catch (error) {

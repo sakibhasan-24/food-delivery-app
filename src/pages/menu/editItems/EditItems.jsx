@@ -10,9 +10,6 @@ import { FaTrash } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import app from "../../../firebase/firebase.config";
 import Spinner from "../../../component/spinner/Spinner";
-import useCreateItem from "../../../hooks/useCreateItem";
-import { useSelector } from "react-redux";
-import Swal from "sweetalert2";
 
 const ingredientsItem = [
   "appetizer",
@@ -37,16 +34,14 @@ const ingredientsItem = [
   "sauce",
 ];
 // console.log(ingredientsItem);
-export default function AddMenu() {
-  const { currentUser } = useSelector((state) => state.user);
+export default function EditItems() {
   const [ingredientsInput, setIngredientsInput] = useState(1);
-  const [imageUploadingLoading, setImgaeUploadLoading] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [imagesFiles, setImagesFiles] = useState([]);
   const [imageMessageError, setImageMessageError] = useState(null);
   const [imageUploadProgress, setImageUploadProgress] = useState(0);
   //   console.log(imagesFiles.length);
 
-  const { createItem, setItem, errorCreate: error, loading } = useCreateItem();
   const [ingredientItem, setIngredientItem] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
@@ -80,7 +75,6 @@ export default function AddMenu() {
     setIsOffer(formData.offer === "yes" ? true : false);
   }, [formData?.offer]);
   const uploadImage = () => {
-    setImgaeUploadLoading(true);
     setImageMessageError(false);
     if (
       imagesFiles.length > 0 &&
@@ -107,7 +101,6 @@ export default function AddMenu() {
       setImageMessageError("Maximum 6 images allowed and less than 2 mb");
     }
     // setImageMessageError(false);
-    setImgaeUploadLoading(false);
   };
   const storeImage = (files) => {
     return new Promise((resolve, reject) => {
@@ -148,26 +141,6 @@ export default function AddMenu() {
   if (imageUploadProgress > 0 && imageUploadProgress < 100) {
     return <Spinner />;
   }
-  const handleCreateItem = async (e) => {
-    e.preventDefault();
-    console.log(formData);
-    const items = {
-      ...formData,
-      userId: currentUser?._id,
-      userEmail: currentUser?.email,
-    };
-    const result = await createItem(items);
-    if (result.success) {
-      Swal.fire({
-        icon: "success",
-        title: "Item Added Successfully",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    }
-    console.log("result", result);
-  };
-
   return (
     <div
       className={`w-full mx-auto opa rounded-md  bg-slate-800 ${
@@ -179,17 +152,14 @@ export default function AddMenu() {
       </h1>
       <div>
         <div>
-          <form
-            onSubmit={handleCreateItem}
-            className="w-full  p-6 my-10  mx-auto"
-          >
+          <form className="w-full  p-6 my-10  mx-auto">
             <div
               className={`flex flex-row gap-2 ${isOffer && "justify-evenly"}`}
             >
               <div
                 className={`w-full 
-                  ${isOffer ? "w-full " : "sm:w-2/3"}
-                 mb-4 flex flex-col gap-2`}
+                    ${isOffer ? "w-full " : "sm:w-2/3"}
+                   mb-4 flex flex-col gap-2`}
               >
                 <label
                   htmlFor="name"
@@ -208,9 +178,9 @@ export default function AddMenu() {
               </div>
               <div
                 className={`w-full 
-                  ${
-                    isOffer ? "w-full " : "sm:w-3/4"
-                  }  mb-4 flex flex-col gap-2`}
+                    ${
+                      isOffer ? "w-full " : "sm:w-3/4"
+                    }  mb-4 flex flex-col gap-2`}
               >
                 <label
                   htmlFor="name"
@@ -290,7 +260,7 @@ export default function AddMenu() {
                   id="category"
                   name="category"
                   onChange={handleFormData}
-                  value={formData.category}
+                  value="select category"
                   className="w-full   text-orange-800 bg-slate-50 focus:border-0 rounded-lg px-2 py-2  border-gray-200 border-2"
                 >
                   <option value="select category">select category</option>
@@ -386,10 +356,8 @@ export default function AddMenu() {
                   type="button"
                   className="w-full bg-slate-900 py-2 px-2 rounded-lg text-white"
                   onClick={uploadImage}
-                  disabled={loading || (imageUploadingLoading ? true : false)}
                 >
-                  {loading ||
-                    (imageUploadingLoading ? "loading......." : "upload image")}
+                  Upload Image
                 </button>
                 {imageUploadProgress > 0 && imageUploadProgress < 100 && (
                   <p className="text-xl font-semibold text-center text-orange-700">
@@ -429,7 +397,7 @@ export default function AddMenu() {
 
             <input
               type="submit"
-              value={`${loading ? "creating..." : "create items"} `}
+              value={`create items`}
               className="w-full bg-slate-700 text-white py-2 px-2 rounded-lg cursor-pointer hover:bg-slate-500"
             />
 
