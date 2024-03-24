@@ -38,30 +38,32 @@ export default function Items() {
   return (
     <div>
       Items
-      <div className="bg-slate-900 sm:p-12 flex items-center justify-center rounded-lg">
-        {pageList.map((btn) => (
-          <button
-            style={{ backgroundColor: currentPage === btn ? "red" : "black" }}
-            onClick={() => handleCurrentPage(btn)}
-            className="bg-slate-900 text-white px-4 py-2 rounded-lg ml-4"
-            key={btn}
+      {items.totalItems > 6 && (
+        <div className=" max-w-6xl mx-auto sm:p-12 flex items-center justify-center rounded-lg">
+          {pageList.map((btn) => (
+            <button
+              style={{ backgroundColor: currentPage === btn ? "red" : "black" }}
+              onClick={() => handleCurrentPage(btn)}
+              className="bg-slate-900 text-white px-4 py-2 rounded-lg ml-4"
+              key={btn}
+            >
+              {btn + 1}
+            </button>
+          ))}
+          <select
+            name=""
+            id=""
+            value={perPage}
+            onChange={handleCurrentPageChange}
+            className="ml-6"
           >
-            {btn + 1}
-          </button>
-        ))}
-        <select
-          name=""
-          id=""
-          value={perPage}
-          onChange={handleCurrentPageChange}
-          className="ml-6"
-        >
-          <option value="1"> 1 </option>
-          <option value="2"> 2 </option>
-          <option value="3"> 3 </option>
-          <option value={items?.totalItems}>All </option>
-        </select>
-      </div>
+            <option value="1"> 1 </option>
+            <option value="2"> 2 </option>
+            <option value="3"> 3 </option>
+            <option value={items?.totalItems}>All </option>
+          </select>
+        </div>
+      )}
     </div>
   );
 }
