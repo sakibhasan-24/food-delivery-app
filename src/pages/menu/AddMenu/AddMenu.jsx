@@ -14,7 +14,7 @@ import useCreateItem from "../../../hooks/useCreateItem";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 
-const ingredientsItem = [
+const categoryItems = [
   "appetizer",
   "main-course",
   "dessert",
@@ -36,7 +36,7 @@ const ingredientsItem = [
   "soup",
   "sauce",
 ];
-// console.log(ingredientsItem);
+// console.log(categoryItems);
 export default function AddMenu() {
   const { currentUser } = useSelector((state) => state.user);
   const [ingredientsInput, setIngredientsInput] = useState(1);
@@ -252,11 +252,11 @@ export default function AddMenu() {
                       className="w-full   text-orange-800 bg-slate-50 focus:border-0 rounded-lg px-2 py-2  border-gray-200 border-2"
                     >
                       <option value="select offer">select offer</option>
-                      <option value="5">5</option>
-                      <option value="10">10</option>
-                      <option value="15">15</option>
-                      <option value="20">20</option>
-                      <option value="25">25</option>
+                      <option value="5">5%</option>
+                      <option value="10">10%</option>
+                      <option value="15">15%</option>
+                      <option value="20">20%</option>
+                      <option value="25">25%</option>
                     </select>
                   </div>
                 </div>
@@ -294,7 +294,7 @@ export default function AddMenu() {
                   className="w-full   text-orange-800 bg-slate-50 focus:border-0 rounded-lg px-2 py-2  border-gray-200 border-2"
                 >
                   <option value="select category">select category</option>
-                  {ingredientsItem.map((item, index) => (
+                  {categoryItems.map((item, index) => (
                     <option key={index} value={item}>
                       {item}
                     </option>
