@@ -38,7 +38,6 @@ export default function Items() {
     setCurrentPage(0);
   };
 
-  //   console.log(items.items);
   return (
     <div className="w-full sm:max-w-5xl mx-auto p-4 sm:p-8 ">
       <div className="mb-12">

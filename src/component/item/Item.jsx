@@ -1,14 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function Item({ item }) {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const handleImageLoad = () => {
+    setImageLoaded(true);
+  };
   return (
-    <div className="shadow-lg max-w-xs mx-auto shadow-sky-100 bg-slate-50 z-20  rounded-lg my-12">
+    <div
+      onLoad={handleImageLoad}
+      className={`shadow-lg max-w-xs mx-auto shadow-slate-950   rounded-lg my-12 `}
+    >
+      {!imageLoaded && (
+        <div className="flex flex-col gap-4 w-full h-full">
+          <div className="skeleton h-32 w-full"></div>
+        </div>
+      )}
       <div className="flex items-center   justify-center ">
         <img
+          className={`rounded-lg  w-full  mx-auto`}
           src={item.image[0]}
           alt="images"
-          className="rounded-lg  w-full  mx-auto"
         />
       </div>
       <div className="p-4">
