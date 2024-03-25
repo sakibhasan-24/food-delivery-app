@@ -7,6 +7,7 @@ import Dashboard from "../pages/dashboard/dashboard/Dashboard";
 import Profile from "../pages/dashboard/profile/Profile";
 import AddMenu from "../pages/menu/AddMenu/AddMenu";
 import Items from "../pages/items/Items";
+import ItemDetails from "../component/itemDetails/ItemDetails";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
       {
         path: "/items",
         element: <Items />,
+      },
+      {
+        path: "/item/details/:itemName/:itemId",
+        element: <ItemDetails />,
       },
       {
         path: "/login",

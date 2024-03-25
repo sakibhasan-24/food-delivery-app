@@ -3,6 +3,7 @@ import useApiCall from "./api/useApiCall";
 
 export default function useGetItems() {
   const [items, setItems] = useState([]);
+  const [item, setItem] = useState({});
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [perPage, setPerPage] = useState(6);
@@ -23,6 +24,20 @@ export default function useGetItems() {
       setLoading(false);
     }
   };
+  //   get singleItem
+
+  const getItem = async (id) => {
+    setLoading(true);
+    try {
+      const res = await axiosPublic.get(`/api/food/get-items?itemId=${id}`);
+      setItem(res.data);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return {
     loading,
     getItems,
@@ -32,5 +47,8 @@ export default function useGetItems() {
     currentPage,
     setCurrentPage,
     setPerPage,
+    getItem,
+    setItem,
+    item,
   };
 }

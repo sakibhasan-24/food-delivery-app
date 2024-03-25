@@ -41,9 +41,9 @@ export default function Item({ item }) {
           ))}
         </div>
         <div className="flex justify-between items-center my-6">
-          <p className="text-slate-900 text-xl ">
+          <p className="text-slate-50 text-xl ">
             $
-            <span className="text-2xl font-bold text-slate-700">
+            <span className="text-2xl font-bold text-slate-500">
               {item.price}
             </span>
           </p>
