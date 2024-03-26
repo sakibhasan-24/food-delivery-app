@@ -48,9 +48,11 @@ export default function AddMenu() {
 
   const { createItem, setItem, errorCreate: error, loading } = useCreateItem();
   const [ingredientItem, setIngredientItem] = useState([]);
+  const [isOffer, setIsOffer] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     offer: "no",
+
     offerPrice: 0,
     price: 0,
     category: "",
@@ -63,7 +65,7 @@ export default function AddMenu() {
     const { name, value } = e.target;
     if (name.startsWith("ingredients-")) {
       const index = parseInt(name.split("-")[1]);
-      console.log(index);
+      // console.log(index);
       const newIngredientItem = [...ingredientItem];
       newIngredientItem[index] = value;
       setIngredientItem(newIngredientItem);
@@ -73,8 +75,6 @@ export default function AddMenu() {
     }
   };
   //   console.log(formData);
-
-  const [isOffer, setIsOffer] = useState(false);
 
   useEffect(() => {
     setIsOffer(formData.offer === "yes" ? true : false);
@@ -150,12 +150,15 @@ export default function AddMenu() {
   }
   const handleCreateItem = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    // console.log(formData);
     const items = {
       ...formData,
       userId: currentUser?._id,
       userEmail: currentUser?.email,
+      isOffer: isOffer,
+      offerPercentage: isOffer && formData.offerPrice,
     };
+    console.log(items);
     const result = await createItem(items);
     if (result.success) {
       Swal.fire({
@@ -165,8 +168,9 @@ export default function AddMenu() {
         timer: 1500,
       });
     }
-    console.log("result", result);
+    // console.log("result", result);
   };
+  // console.log(formData);
 
   return (
     <div

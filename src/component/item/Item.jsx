@@ -9,21 +9,21 @@ export default function Item({ item }) {
   return (
     <div
       onLoad={handleImageLoad}
-      className={`shadow-lg max-w-xs mx-auto shadow-slate-950   rounded-lg my-12 `}
+      className={`shadow-lg max-w-xs mx-auto  flex flex-col shadow-slate-950   rounded-lg my-12 `}
     >
       {!imageLoaded && (
         <div className="flex flex-col gap-4 w-full h-full">
           <div className="skeleton h-32 w-full"></div>
         </div>
       )}
-      <div className="flex items-center   justify-center ">
+      <div className="flex items-center  justify-center ">
         <img
-          className={`rounded-lg  w-full  mx-auto`}
+          className={`rounded-lg  h-[200px] w-full  mx-auto`}
           src={item.image[0]}
           alt="images"
         />
       </div>
-      <div className="p-4">
+      <div className="p-4 flex-grow">
         <h2 className="text-xl text-slate-600 z-50 font-bold mb-4">
           {item.name}
         </h2>
