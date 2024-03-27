@@ -14,7 +14,7 @@ export default function ItemController() {
       try {
         const res = await axiosPublic.get(`/api/food/get-items?startIndex=0`);
         // console.log(res);
-        setItems(res.data.items);
+        setItems(res.data);
       } catch (error) {
         console.log(error);
       } finally {
@@ -23,6 +23,20 @@ export default function ItemController() {
     };
     fetchData();
   }, []);
+  //   console.log(items);
+  const handleShowMore = async () => {
+    setLoading(true);
+    try {
+      const res = await axiosPublic.get(
+        `/api/food/get-items?startIndex=${0}&pageSize=${items?.totalItems}`
+      );
+      //   console.log(res);
+      setItems(res?.data);
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
   if (loading) {
     return <Spinner />;
   }
@@ -44,7 +58,7 @@ export default function ItemController() {
             </tr>
           </thead>
           <tbody>
-            {items.map((item, idx) => (
+            {items?.items?.map((item, idx) => (
               <tr key={item?._id}>
                 <td>{idx + 1}</td>
                 <td>{item.name}</td>
@@ -61,8 +75,11 @@ export default function ItemController() {
                 </td>
               </tr>
             ))}
-            {items?.length === 6 && (
-              <button className="w-full bg-slate-800 text-white  py-2 rounded-lg">
+            {items?.items?.length === 6 && (
+              <button
+                onClick={handleShowMore}
+                className="w-full bg-slate-800 text-white  py-2 rounded-lg"
+              >
                 see more
               </button>
             )}
