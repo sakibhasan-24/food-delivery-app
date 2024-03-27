@@ -23,7 +23,7 @@ export default function Item({ item }) {
           alt="images"
         />
       </div>
-      <div className="p-4 flex-grow">
+      <div className="p-4 flex-grow  ">
         <h2 className="text-xl text-slate-600 z-50 font-bold mb-4">
           {item.name}
         </h2>

@@ -10,6 +10,7 @@ export default function ItemDetails() {
   const [imageLoading, setImageLoading] = useState(false);
   const [seeMore, setSeeMore] = useState(false);
   const seeMoreRef = useRef(null);
+
   const imageIsLoading = () => {
     setImageLoading(true);
   };
@@ -21,12 +22,14 @@ export default function ItemDetails() {
       getItemCall();
     }
   }, [itemId]);
-  console.log(item);
+  //   console.log(item);
   if (loading || Object.keys(item).length === 0) {
     return <Spinner />;
   }
   //   console.log(item.items[0].image);
-
+  const newPrice =
+    Number(item?.items[0]?.price) - Number(item?.items[0]?.offerPercentage);
+  console.log(newPrice);
   //   console.log()
   return (
     <div
@@ -46,14 +49,26 @@ export default function ItemDetails() {
         </h1>
         <div className="flex justify-between my-12 text-xl">
           <p className=" text-neutral-content">price </p>
-          <p className=" font-semibol text-neutral-content">
+          <p
+            className={`font-semibol text-neutral-content ${
+              item.items[0].isOffer && "line-through"
+            } `}
+          >
             ${item.items[0].price}
           </p>
         </div>
         <div className="flex justify-between my-12 text-xl">
           <p className=" text-neutral-content">offer</p>
           <p className=" font-semibol text-neutral-content">
-            {item.items[0].isOffer ? item.items[0].offerPercentage : "No offer"}
+            {item.items[0].isOffer
+              ? `${item.items[0].offerPercentage}%`
+              : "No offer"}
+          </p>
+        </div>
+        <div className="flex justify-between my-12 text-xl">
+          <p className=" text-neutral-content">offer price</p>
+          <p className=" font-semibol text-neutral-content">
+            {item.items[0].isOffer && newPrice}
           </p>
         </div>
       </section>
