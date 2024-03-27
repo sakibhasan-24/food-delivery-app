@@ -58,6 +58,16 @@ export default function Dashboard() {
         >
           Orders
         </Link>
+        {currentUser && currentUser?.isAdmin && (
+          <>
+            <Link
+              className="hover:bg-amber-800 hover:p-2 hover:rounded-md transition-all duration-700"
+              to="/dashboard/items"
+            >
+              items
+            </Link>
+          </>
+        )}
 
         <Link to="/" onClick={handleLogOut} className=" font-bold text-xl">
           sign Out

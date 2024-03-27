@@ -8,6 +8,7 @@ import Profile from "../pages/dashboard/profile/Profile";
 import AddMenu from "../pages/menu/AddMenu/AddMenu";
 import Items from "../pages/items/Items";
 import ItemDetails from "../component/itemDetails/ItemDetails";
+import ItemController from "../pages/allItems/ItemController";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
           {
             path: "/dashboard/add-menu",
             element: <AddMenu />,
+          },
+          {
+            path: "/dashboard/items",
+            element: <ItemController />,
           },
         ],
       },
