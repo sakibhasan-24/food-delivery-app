@@ -69,3 +69,8 @@ button:focus-visible {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+body {
+  background-color: #242424;
+  color: #4f3c3c;
+  font-family: "Inter", sans-serif;
+}

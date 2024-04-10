@@ -3,9 +3,12 @@ import useApiCall from "../../hooks/api/useApiCall";
 import Spinner from "../../component/spinner/Spinner";
 import { Link } from "react-router-dom";
 import { CiEdit, CiTrash } from "react-icons/ci";
+import Swal from "sweetalert2";
 export default function ItemController() {
   const [items, setItems] = useState([]);
+
   const [loading, setLoading] = useState(false);
+
   const axiosPublic = useApiCall();
 
   useEffect(() => {
@@ -22,7 +25,7 @@ export default function ItemController() {
       }
     };
     fetchData();
-  }, []);
+  }, [items.length]);
   //   console.log(items);
   const handleShowMore = async () => {
     setLoading(true);
@@ -37,11 +40,53 @@ export default function ItemController() {
       setLoading(false);
     }
   };
+
+  const handleDelete = async (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (res) => {
+      if (res.isConfirmed) {
+        try {
+          const res = await axiosPublic.delete(`/api/food/delete-item/${id}`);
+          console.log(res);
+          Swal.fire("Deleted!", "Your file has been deleted.", "success");
+          const remainingItems = items.items.filter((item) => item._id !== id);
+          setItems(remainingItems);
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    });
+    setLoading(false);
+  };
+
   if (loading) {
     return <Spinner />;
   }
 
-  //   console.log(items);
+  if (items?.items?.length === 0) {
+    return (
+      <div>
+        <h1 className="text-3xl font-bold text-center">No items found</h1>
+        <p className="text-center">Please add some items</p>
+        <Link
+          className="w-full mx-auto bg-slate-800 text-white px-6   py-2 rounded-lg mt-4"
+          to="/dashboard/add-menu"
+        >
+          Add Items
+        </Link>
+      </div>
+    );
+  }
+  // console.log(items.items.length);
   return (
     <div className="max-w-4xl mx-auto ">
       <h1 className="text-3xl font-bold text-center">All items</h1>
@@ -71,7 +116,10 @@ export default function ItemController() {
                   <CiEdit className="text-green-600 cursor-pointer" />
                 </td>
                 <td>
-                  <CiTrash className="text-red-600 cursor-pointer" />
+                  <CiTrash
+                    onClick={() => handleDelete(item?._id)}
+                    className="text-red-600 cursor-pointer"
+                  />
                 </td>
               </tr>
             ))}

@@ -16,7 +16,7 @@ export default function Navbar() {
           <span className="text-orange-400 text-3xl sm:text-6xl font-serif  font-bold">
             Food
           </span>
-          <span className="ml-2 text-2xl font-extrabold">Affair</span>
+          <span className="ml-2 text-2xl font-extrabold">Bridge</span>
         </Link>
       </div>
       <div>
