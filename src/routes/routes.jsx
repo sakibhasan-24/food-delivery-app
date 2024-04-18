@@ -9,6 +9,7 @@ import AddMenu from "../pages/menu/AddMenu/AddMenu";
 import Items from "../pages/items/Items";
 import ItemDetails from "../component/itemDetails/ItemDetails";
 import ItemController from "../pages/allItems/ItemController";
+import EditItems from "../pages/menu/editItems/EditItems";
 
 const router = createBrowserRouter([
   {
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
           {
             path: "/dashboard/items",
             element: <ItemController />,
+          },
+          {
+            path: "/dashboard/edit-item/:id",
+            element: <EditItems />,
           },
         ],
       },

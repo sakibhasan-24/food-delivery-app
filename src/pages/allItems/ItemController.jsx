@@ -113,7 +113,9 @@ export default function ItemController() {
                   details
                 </Link>
                 <td>
-                  <CiEdit className="text-green-600 cursor-pointer" />
+                  <Link to={`/dashboard/edit-item/${item._id}`}>
+                    <CiEdit className="text-green-600 cursor-pointer" />
+                  </Link>
                 </td>
                 <td>
                   <CiTrash
