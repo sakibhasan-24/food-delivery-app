@@ -1,13 +1,20 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import useGetItems from "../../hooks/useGetItems";
+import { useParams } from "react-router-dom";
+import Item from "../item/Item";
 
 export default function CarouselItem({ item, itemImages }) {
   const [seeMore, setSeeMore] = useState(false);
   const seeMoreRef = useRef(null);
+  const params = useParams();
+  // console.log(params.itemId);
 
+  // console.log(item?.items[0]?.category);
+  // console.log(categoryItem.length);
   return (
-    <div className="w-full flex flex-col items-center justify-center  mx-auto sm:w-full sm:mx-6 ">
+    <div className="max-w-xl flex flex-col items-center justify-center  mx-auto sm:w-full sm:mx-6 ">
       <Carousel
         className=" my-2 h-full "
         autoPlay
@@ -38,7 +45,6 @@ export default function CarouselItem({ item, itemImages }) {
         </p>
       </div>
       {/* related catgory */}
-      <div>related</div>
     </div>
   );
 }

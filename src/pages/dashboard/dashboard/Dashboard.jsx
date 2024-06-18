@@ -52,12 +52,17 @@ export default function Dashboard() {
         >
           WishList
         </Link>
-        <Link
-          className="hover:bg-amber-800 hover:p-2 hover:rounded-md transition-all duration-700"
-          to="/dashboard/orders"
-        >
-          Orders
-        </Link>
+        {currentUser && currentUser?.isAdmin && (
+          <>
+            <Link
+              className="hover:bg-amber-800 hover:p-2 hover:rounded-md transition-all duration-700"
+              to="/dashboard/orders"
+            >
+              orders
+            </Link>
+          </>
+        )}
+
         {currentUser && currentUser?.isAdmin && (
           <>
             <Link

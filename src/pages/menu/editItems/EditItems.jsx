@@ -4,37 +4,39 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-// import { FileInput } from "flowbite-react";
 import { FileInput } from "flowbite-react";
 import { FaTrash } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import app from "../../../firebase/firebase.config";
 import Spinner from "../../../component/spinner/Spinner";
+import { useParams } from "react-router-dom";
+import useApiCall from "../../../hooks/api/useApiCall";
+import useCreateItem from "../../../hooks/useCreateItem";
 
-const ingredientsItem = [
+const categoryItems = [
   "appetizer",
   "main-course",
   "dessert",
-  "beverage",
   "soup",
   "salad",
   "side-dish",
-  "bread",
+  "couple-package",
+  "family-package",
+  "student-package",
   "breakfast",
   "lunch",
   "dinner",
   "snack",
-  "beverage",
-  "sauce",
   "drink",
-  "condiment",
   "spice",
-  "herb",
-  "soup",
-  "sauce",
 ];
 // console.log(ingredientsItem);
 export default function EditItems() {
+  const { id } = useParams();
+  // console.log(id);
+  const [item, setItem] = useState([]);
+  const axiosPublic = useApiCall();
+  const { updateItem } = useCreateItem();
   const [ingredientsInput, setIngredientsInput] = useState(1);
   const [openModal, setOpenModal] = useState(false);
   const [imagesFiles, setImagesFiles] = useState([]);
@@ -47,13 +49,22 @@ export default function EditItems() {
     name: "",
     offer: "no",
     offerPrice: 0,
-    price: 0,
+    price: "",
     category: "",
     ingredients: ingredientItem,
     image: [],
     description: "",
   });
-
+  useEffect(() => {
+    const callApi = async () => {
+      const res = await axiosPublic.get(`/api/food/get-items?itemId=${id}`);
+      setFormData(res.data.items[0]);
+      setItem(res.data.items[0]);
+    };
+    callApi();
+  }, [id]);
+  // console.log(formData.isOffer);
+  // console.log(formData);
   const handleFormData = (e) => {
     const { name, value } = e.target;
     if (name.startsWith("ingredients-")) {
@@ -64,10 +75,10 @@ export default function EditItems() {
       setIngredientItem(newIngredientItem);
       setFormData({ ...formData, ingredients: newIngredientItem });
     } else {
+      console.log(name, value);
       setFormData({ ...formData, [name]: value });
     }
   };
-  //   console.log(formData);
 
   const [isOffer, setIsOffer] = useState(false);
 
@@ -75,6 +86,7 @@ export default function EditItems() {
     setIsOffer(formData.offer === "yes" ? true : false);
   }, [formData?.offer]);
   const uploadImage = () => {
+    // console.log("image....");
     setImageMessageError(false);
     if (
       imagesFiles.length > 0 &&
@@ -122,6 +134,7 @@ export default function EditItems() {
         },
         () => {
           // Upload completed successfully, now we can get the download URL
+
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             //   console.log("File available at", downloadURL);
             resolve(downloadURL);
@@ -137,8 +150,21 @@ export default function EditItems() {
     setImagesFiles(newImagesFiles);
     setFormData({ ...formData, image: newImagesFiles });
   };
-  // console.log(imageMessageError);
+  const handleEdit = async (e) => {
+    e.preventDefault();
+    const updatedFormData = { ...formData, isOffer: isOffer ? "yes" : "no" };
+    if (isOffer) {
+      updatedFormData.offerPrice = formData.offerPrice;
+    }
+    console.log("Updated Form Data:", updatedFormData); // Add this line
+    const res = await updateItem(id, updatedFormData);
+    console.log("Response from backend:", res); // Add this line
+  };
+
   if (imageUploadProgress > 0 && imageUploadProgress < 100) {
+    return <Spinner />;
+  }
+  if (!item) {
     return <Spinner />;
   }
   return (
@@ -148,11 +174,12 @@ export default function EditItems() {
       }`}
     >
       <h1 className=" font-semibold text-center text-4xl ">
-        Add <span className="text-amber-600 font-bold font-serif">Items</span>
+        Update{" "}
+        <span className="text-amber-600 font-bold font-serif">Items</span>
       </h1>
       <div>
         <div>
-          <form className="w-full  p-6 my-10  mx-auto">
+          <form onSubmit={handleEdit} className="w-full  p-6 my-10  mx-auto">
             <div
               className={`flex flex-row gap-2 ${isOffer && "justify-evenly"}`}
             >
@@ -172,11 +199,12 @@ export default function EditItems() {
                   type="text"
                   name="name"
                   id="name"
+                  defaultValue={formData.name}
                   className="w-full  text-orange-800 bg-slate-50 focus:border-0 rounded-lg px-2 py-2  border-gray-200 border-2"
                   onChange={handleFormData}
                 />
               </div>
-              <div
+              {/* <div
                 className={`w-full 
                     ${
                       isOffer ? "w-full " : "sm:w-3/4"
@@ -191,10 +219,10 @@ export default function EditItems() {
                 <select
                   id="offer"
                   name="offer"
-                  value={formData.offer}
+                  defaultValue={item.isOffer}
                   onChange={handleFormData}
                   className={`${
-                    isOffer ? "w-full " : "sm:w-1/4"
+                    item.isOffer ? "w-full " : "sm:w-1/4"
                   }  text-orange-800 bg-slate-50 focus:border-0 rounded-lg px-2 py-2  border-gray-200 border-2`}
                 >
                   <option disabled value="select offer">
@@ -203,8 +231,8 @@ export default function EditItems() {
                   <option value="yes">Yes</option>
                   <option value="no">No</option>
                 </select>
-              </div>
-              {isOffer && (
+              </div> */}
+              {/* {item.isOffer && (
                 <div className="w-full flex flex-col gap-2">
                   <div className="w-full sm:w-2/5 flex flex-col gap-2">
                     <label
@@ -218,6 +246,7 @@ export default function EditItems() {
                     <select
                       name="offerPrice"
                       id="offerPrice"
+                      value={item.offerPercentage}
                       onChange={handleFormData}
                       className="w-full   text-orange-800 bg-slate-50 focus:border-0 rounded-lg px-2 py-2  border-gray-200 border-2"
                     >
@@ -230,7 +259,7 @@ export default function EditItems() {
                     </select>
                   </div>
                 </div>
-              )}
+              )} */}
             </div>
             <div className="w-full  flex flow-row sm:flex-row gap-2">
               <div className="w-full sm:w-2/5 flex flex-col gap-2">
@@ -245,6 +274,7 @@ export default function EditItems() {
                   placeholder="price"
                   type="number"
                   name="price"
+                  defaultValue={formData?.price}
                   id="price"
                   className="w-full  text-orange-800 bg-slate-50 focus:border-0 rounded-lg px-2 py-2  border-gray-200 border-2"
                 />
@@ -259,12 +289,13 @@ export default function EditItems() {
                 <select
                   id="category"
                   name="category"
+                  // defaultValue={formData.category}
                   onChange={handleFormData}
-                  value="select category"
+                  value={formData.category}
                   className="w-full   text-orange-800 bg-slate-50 focus:border-0 rounded-lg px-2 py-2  border-gray-200 border-2"
                 >
                   <option value="select category">select category</option>
-                  {ingredientsItem.map((item, index) => (
+                  {categoryItems.map((item, index) => (
                     <option key={index} value={item}>
                       {item}
                     </option>
@@ -273,7 +304,7 @@ export default function EditItems() {
               </div>
             </div>
             <div className="w-full  flex flow-row sm:flex-row gap-2">
-              <div className="w-full sm:w-3/4 flex flex-col gap-2">
+              {/* <div className="w-full sm:w-3/4 flex flex-col gap-2">
                 <label
                   htmlFor="ingredients"
                   className="block text-gray-200 text-md font-semibold"
@@ -317,7 +348,7 @@ export default function EditItems() {
                     )}
                   </div>
                 ))}
-              </div>
+              </div> */}
             </div>
             <div className="w-full  flex flow-row sm:flex-row gap-2">
               <div className="w-full sm:w-3/4 flex flex-col gap-2">
@@ -334,6 +365,7 @@ export default function EditItems() {
                   id="description"
                   rows={4}
                   cols={50}
+                  defaultValue={formData.description}
                   onChange={handleFormData}
                 />
               </div>
@@ -369,9 +401,9 @@ export default function EditItems() {
                     image uploaded successfully
                   </p>
                 )}
-                {formData.image.length === 0 && ""}
+                {formData?.image?.length === 0 && ""}
                 <div className="flex gap-1 flex-nowrap ">
-                  {formData.image.map((image, idx) => (
+                  {formData?.image?.map((image, idx) => (
                     <div key={idx} className=" flex   gap-2">
                       <div className="relative">
                         <img
@@ -397,7 +429,7 @@ export default function EditItems() {
 
             <input
               type="submit"
-              value={`create items`}
+              value={`Update items`}
               className="w-full bg-slate-700 text-white py-2 px-2 rounded-lg cursor-pointer hover:bg-slate-500"
             />
 

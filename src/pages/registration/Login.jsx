@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 // import { Swal } from "sweetalert2/dist/sweetalert2";
 import Swal from "sweetalert2";
 import { useDispatch } from "react-redux";
@@ -14,6 +14,8 @@ import GoogleSignUp from "../../component/GoogleSignUp";
 export default function Login() {
   const { userLoading, userLogIn } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({});
   // logInStart,logInFailure
@@ -31,7 +33,9 @@ export default function Login() {
           timer: 1500,
         });
       }
-      navigate("/");
+      // navigate(location?.state ? location.state : "/");
+      const { from } = location.state || { from: { pathname: "/" } };
+      navigate(from);
     } catch (error) {
       dispatch(logInFailure());
       console.log(error);
@@ -96,6 +100,9 @@ export default function Login() {
           />
           <GoogleSignUp />
         </form>
+        <p className="my-6 text-center">
+          don't have an account? <Link to="/sign-up">Sign Up</Link>
+        </p>
       </div>
     </div>
   );

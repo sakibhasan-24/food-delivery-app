@@ -5,9 +5,12 @@ import { useDispatch } from "react-redux";
 import useAuth from "../hooks/useAuth";
 import { logInSuccess } from "../redux/user/userSlice";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 export default function GoogleSignUp() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // const history = useHistory();
   const auth = getAuth(app);
   const dispatch = useDispatch();
   const { googleSignIn } = useAuth();
@@ -34,7 +37,12 @@ export default function GoogleSignUp() {
         });
       }
       dispatch(logInSuccess(response.user));
-      navigate("/");
+      // navigate("/");
+      // navigate(location?.state ? location.state : "/");
+      console.log(location);
+      // navigate(location?.state ? location.state : "/");
+      const { from } = location.state || { from: { pathname: "/" } };
+      navigate(from);
     } catch (error) {
       console.log(error);
     } finally {

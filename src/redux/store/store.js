@@ -2,11 +2,23 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import userReducer from "../user/userSlice";
+import searchReducer from "../searchReducer/searchReducer";
+import cartReducer from "../cartReducer/cartReducer";
+import { modalReducer } from "../modalReducer/modalReducer";
+import { couponReducer } from "../couponReducer/couponReducer";
+// import { cashReducer } from "../CashReducer/cashReducer";
+import { cashReducer } from "../CashReducer/cashReducer";
 // import userReducer from "./store/userSlice";
 
 const rootReducer = combineReducers({
   user: userReducer,
+  search: searchReducer,
+  itemCart: cartReducer,
+  modalReducer: modalReducer,
+  couponReducer: couponReducer,
+  cash: cashReducer,
 });
+// console.log(rootReducer);
 const persistConfig = {
   key: "root",
   storage,

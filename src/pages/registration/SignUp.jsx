@@ -10,13 +10,14 @@ import app from "../../firebase/firebase.config";
 // import useApiCall from "../../hooks/api/useApiCall";
 import useAuth from "../../hooks/useAuth";
 import GoogleSignUp from "../../component/GoogleSignUp";
+import { Link, useNavigate } from "react-router-dom";
 export default function SignUp() {
   const { userLoading, userSignUp } = useAuth();
   const [formData, setFormData] = useState({});
   const [imageUrl, setImageUrl] = useState(null);
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-
+  const navigate = useNavigate();
   //   console.log(formData);
   const handleImageUpload = async (e) => {
     // console.log("hello");
@@ -82,9 +83,10 @@ export default function SignUp() {
   };
 
   //   console.log(imageUrl);
-  console.log(formData);
+  // console.log(formData);
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     console.log(formData);
     // const user = {
     //   userName: formData.name,
@@ -94,6 +96,15 @@ export default function SignUp() {
     // };
     // console.log(user);
     const userInfo = await userSignUp(formData);
+    Swal.fire({
+      icon: "success",
+      title: "Sign Up Successfully",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+
+    setLoading(false);
+    navigate("/login");
     // console.log(userInfo);
   };
   return (
@@ -141,7 +152,7 @@ export default function SignUp() {
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
-                className="w-full mt-1 px-3 py-2 placeholder-slate-300 border border-slate-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
+                className="w-full text-slate-950 mt-1 px-3 py-2 placeholder-slate-300 border border-slate-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
               />
             </div>
           </div>
@@ -162,7 +173,7 @@ export default function SignUp() {
                   setFormData({ ...formData, password: e.target.value })
                 }
                 // onChange={handleInputChange}
-                className="w-full mt-1 px-3 py-2 placeholder-slate-300 border border-slate-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
+                className="w-full mt-1 px-3 py-2 text-slate-950 placeholder-slate-300 border border-slate-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
               />
             </div>
           </div>
@@ -198,11 +209,14 @@ export default function SignUp() {
           </div>
           <input
             type="submit"
-            value={"signUp"}
-            className="w-full bg-slate-700 rounded-md px-4 py-2 font-bold text-slate-50  hover:bg-slate-600 cursor-pointer"
+            value={loading ? "loading..." : "sign up"}
+            className="w-full my-6 bg-slate-700 rounded-md px-4 py-2 font-bold text-slate-50  hover:bg-slate-600 cursor-pointer"
           />
           <GoogleSignUp />
         </form>
+        <p className="my-6 text-center">
+          already have an account? <Link to="/login">Login</Link>
+        </p>
       </div>
     </div>
   );

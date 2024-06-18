@@ -12,7 +12,7 @@ export default function useCreateItem() {
     setError(null);
     try {
       const res = await axiosPublic.post("/api/food/add-items", item);
-      console.log(res.data);
+      console.log(res);
       setItems([...items, res.data]);
       return res.data;
     } catch (error) {
@@ -23,5 +23,35 @@ export default function useCreateItem() {
     }
   };
 
-  return { createItem, setItems, loading, error };
+  const giveRating = async (productId, star) => {
+    setLoading(true);
+
+    try {
+      const res = await axiosPublic.put(`/api/food/product/star/${productId}`, {
+        star,
+      });
+      console.log(res.data);
+      setItems([...items, res.data]);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const updateItem = async (itemId, item) => {
+    // console.log(item, itemId);
+    setLoading(true);
+    try {
+      const res = await axiosPublic.put(`/api/food/edit-items/${itemId}`, item);
+      console.log(res.data);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  return { createItem, setItems, loading, error, giveRating, updateItem };
 }

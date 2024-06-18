@@ -1,16 +1,53 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
+import showAverage from "../../helper/ratingCalculate";
+import ShowAverageRating from "../ShowAverageRating";
+import _ from "lodash";
+import { Tooltip } from "antd";
+import { useDispatch, useSelector } from "react-redux";
 export default function Item({ item }) {
+  const { currentUser } = useSelector((state) => state.user);
+  const { itemCart } = useSelector((state) => state.itemCart);
+  const dispath = useDispatch();
+  // console.log(itemCart);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [toolTip, setToolTip] = useState("Click To Add Item");
   const handleImageLoad = () => {
     setImageLoaded(true);
+  };
+
+  const handleAddToItem = () => {
+    // console.log(item);
+    let itemCart = [];
+    if (typeof window !== "undefined") {
+      if (localStorage.getItem("itemCart")) {
+        itemCart = JSON.parse(localStorage.getItem("itemCart"));
+      }
+      itemCart.push({ ...item, numberOfItem: 1, gift: "Chocolate" });
+
+      //remove duplicate
+
+      let unique = _.uniqWith(itemCart, _.isEqual);
+      // console.log(unique);
+      localStorage.setItem("itemCart", JSON.stringify(unique));
+      // save to localStorage
+      dispath({ type: "ADD_TO_CART", payload: unique });
+      dispath({ type: "SET_VISIBLE", payload: true });
+      setToolTip("Added");
+    }
   };
   return (
     <div
       onLoad={handleImageLoad}
-      className={`shadow-lg max-w-xs mx-auto  flex flex-col shadow-slate-950   rounded-lg my-12 `}
+      className={`shadow-lg w-[400px] sm:w-full mx-auto  flex flex-col shadow-slate-950   rounded-lg my-12 `}
     >
+      <div className="flex items-center justify-center gap-2 my-2">
+        {item && item.ratings && item.ratings.length > 0 ? (
+          <ShowAverageRating item={item} />
+        ) : (
+          "no rating yet"
+        )}
+      </div>
       {!imageLoaded && (
         <div className="flex flex-col gap-4 w-full h-full">
           <div className="skeleton h-32 w-full"></div>
@@ -47,9 +84,14 @@ export default function Item({ item }) {
               {item.price}
             </span>
           </p>
-          <button className="bg-teal-500 font-bold text-white px-2 py-1 rounded-md hover:bg-teal-600 transition-all duration-300">
-            Add to Cart
-          </button>
+          <Tooltip title={toolTip}>
+            <button
+              onClick={() => handleAddToItem(item)}
+              className="bg-teal-500 font-bold text-white px-2 py-1 rounded-md hover:bg-teal-600 transition-all duration-300"
+            >
+              Add to Cart
+            </button>
+          </Tooltip>
         </div>
         <Link
           to={`/item/details/${item.name}/${item._id}`}

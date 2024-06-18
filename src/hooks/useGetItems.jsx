@@ -24,6 +24,20 @@ export default function useGetItems() {
       setLoading(false);
     }
   };
+
+  const fetchItemsByFilterAndSearch = async (query) => {
+    setLoading(true);
+    try {
+      const res = await axiosPublic.post("/api/food/search/filter", query);
+      console.log("orginal", query);
+      setItems(res.data);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   //   get singleItem
 
   const getItem = async (id) => {
@@ -38,9 +52,27 @@ export default function useGetItems() {
       setLoading(false);
     }
   };
+
+  const getItemsByCategory = async (category) => {
+    // console.log(category);
+    setLoading(true);
+    try {
+      const res = await axiosPublic.get(
+        `/api/food/get-items?category=${category}`
+      );
+      // console.log(res.data?.items);
+      setItems(res?.data?.items);
+      return res.data.items;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return {
     loading,
     getItems,
+    fetchItemsByFilterAndSearch,
     items,
     setItems,
     perPage,
@@ -50,5 +82,6 @@ export default function useGetItems() {
     getItem,
     setItem,
     item,
+    getItemsByCategory,
   };
 }
